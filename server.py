@@ -73,12 +73,22 @@ generation_config.do_sample = True
 
 def run(question):
 
-    prompt = f"""
-    Answer the following question base on the contexts below.
-
-    Question: {question}
-
-    Answer: """
+    if MODEL_TYPE == "seq2seq":
+        prompt = f"""
+        Answer the following question base on the contexts below.
+    
+        Question: {question}
+    
+        Answer: """
+    else:
+        prompt = f"""
+        <|im_begin|>system
+        Answer the following question base on the contexts below.<|im_end|>
+        <|im_begin|>user
+        Question:
+        {question}
+        Answer:<|im_end|>
+        <|im_begin|>assitant"""
     
     encoding = tokenizer(prompt, return_tensors="pt").to(device)
 
@@ -91,7 +101,7 @@ def run(question):
     if MODEL_TYPE == "seq2seq":
         answer = tokenizer.batch_decode(outputs, skip_special_tokens=True)[0]
     else:
-        answer = tokenizer.batch_decode(outputs[:, encoding.input_ids.shape[1]:], skip_special_tokens=True)[0]
+        answer = tokenizer.batch_decode(outputs[:, encoding.input_ids.shape[1]:], skip_special_tokens=True)[0].rstrip("<|im_end|>")
     
     return answer
 
