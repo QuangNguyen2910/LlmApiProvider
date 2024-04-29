@@ -75,20 +75,20 @@ def run(question):
 
     if MODEL_TYPE == "seq2seq":
         prompt = f"""
-        Answer the following question base on the contexts below.
+        Answer the following question from user.
     
         Question: {question}
     
         Answer: """
     else:
         prompt = f"""
-        <|im_begin|>system
-        Answer the following question base on the contexts below.<|im_end|>
-        <|im_begin|>user
-        Question:
+        <|im_start|>system
+        Answer the following question from user.<|im_end|>
+        <|im_start|>user
+        ### Question:
         {question}
-        Answer:<|im_end|>
-        <|im_begin|>assitant"""
+        ### Answer:<|im_end|>
+        <|im_start|>assitant"""
     
     encoding = tokenizer(prompt, return_tensors="pt").to(device)
 
