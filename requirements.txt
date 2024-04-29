@@ -1,0 +1,12 @@
+accelerate @ git+https://github.com/huggingface/accelerate.git@cd7df4117d92f660965d5f737364395b5693a535
+peft @ git+https://github.com/huggingface/peft.git@8bc3c0861d4a06d1501b5e8954079804419bb0e6
+transformers @ git+https://github.com/huggingface/transformers.git@73014b561d5f88d728e46a57d346f516fefe3f2d
+nest-asyncio
+uvicorn==0.25.0
+wandb==0.16.6
+bitsandbytes==0.43.1
+fastapi==0.108.0
+loralib==0.1.2
+pyngrok==7.1.6
+python-multipart==0.0.9
+einops==0.8.0
