@@ -16,7 +16,7 @@ if __name__ == '__main__':
     args = parseargs()
     lines = [line for line in vars(args).values()]
     
-    with open('Model/server_config.txt', 'w') as f:
+    with open('server_config.txt', 'w') as f:
         for line in lines:
             f.write(str(line) + '\n')
 
