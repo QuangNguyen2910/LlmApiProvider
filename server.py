@@ -73,22 +73,15 @@ generation_config.do_sample = True
 
 def run(question):
 
-    if MODEL_TYPE == "seq2seq":
-        prompt = f"""
-        Answer the following question from user.
-    
-        Question: {question}
-    
-        Answer: """
-    else:
-        prompt = f"""
-        <|im_start|>system
-        Answer the following question from user.<|im_end|>
-        <|im_start|>user
-        ### Question:
-        {question}
-        ### Answer:<|im_end|>
-        <|im_start|>assitant"""
+    question_prompt = f"""
+    ### Question:
+    {question}
+    ### Answer:
+    """
+    chat = [
+      {"role": "system", "content": "Answer the following question from user."},
+      {"role": "user", "content": question_prompt},
+    ]
     
     encoding = tokenizer(prompt, return_tensors="pt").to(device)
 
