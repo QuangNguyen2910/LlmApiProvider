@@ -87,7 +87,10 @@ def run(question):
       {"role": "user", "content": question_prompt},
     ]
     
-    encoding = tokenizer.apply_chat_template(chat, tokenize=True, add_generation_prompt=True, return_tensors="pt").to(device)
+    encoding = tokenizer.apply_chat_template(chat, tokenize=True,
+                                             add_generation_prompt=True,
+                                             return_dict=True,
+                                             return_tensors="pt").to(device)
 
     with torch.inference_mode():
         outputs = model.generate(
