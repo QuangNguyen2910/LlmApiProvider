@@ -75,7 +75,7 @@ class LlmModel:
                     device_map="auto"
                 )
                 
-            tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+            tokenizer = AutoTokenizer.from_pretrained(self.model_name, token=self.hf_access_token)
             tokenizer.pad_token = tokenizer.eos_token
             
             return model, tokenizer
