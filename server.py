@@ -28,7 +28,7 @@ import wandb
 from Model.llm_model import LlmModel
 
 
-with open('Model/server_config.txt', 'r') as f:
+with open('server_config.txt', 'r') as f:
     lines = f.readlines()
     MODEL_NAME = lines[0].strip()
     PEFT_MODEL_PATH = lines[1].strip()
