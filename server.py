@@ -62,7 +62,7 @@ model = LlmModel(model_name=MODEL_NAME,
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 model, tokenizer = model.get_model()
 
-if "Llama-3" in MODEL_NAME:
+if "Llama-3" in MODEL_NAME or "Phi-3" in MODEL_NAME:
     terminators = [
         tokenizer.eos_token_id,
         tokenizer.convert_tokens_to_ids("<|eot_id|>")
@@ -70,7 +70,7 @@ if "Llama-3" in MODEL_NAME:
 else: terminators = tokenizer.eos_token_id
 
 generation_config = model.generation_config
-generation_config.max_new_tokens = 80
+generation_config.max_new_tokens = 100
 generation_config.temperature = 0.7
 generation_config.top_p = 0.7
 generation_config.num_return_sequences = 1
