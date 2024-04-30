@@ -105,7 +105,7 @@ def run(question):
     if MODEL_TYPE == "seq2seq":
         answer = tokenizer.batch_decode(outputs, skip_special_tokens=True)[0]
     else:
-        answer = tokenizer.batch_decode(outputs[:, encoding.input_ids.shape[1]:], skip_special_tokens=True)[0]
+        answer = tokenizer.batch_decode(outputs[:, encoding.input_ids.shape[1]:], skip_special_tokens=True)[0].rstrip("<|im_end|>")
     
     return answer
 
