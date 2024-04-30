@@ -62,15 +62,29 @@ model = LlmModel(model_name=MODEL_NAME,
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 model, tokenizer = model.get_model()
 
+terminators = [
+    tokenizer.eos_token_id,
+    tokenizer.convert_tokens_to_ids("<|eot_id|>")
+]
+
+generation_config = model.generation_config
+generation_config.max_new_tokens = 80
+generation_config.temperature = 0.7
+generation_config.top_p = 0.7
+generation_config.num_return_sequences = 1
+generation_config.pad_token_id = tokenizer.eos_token_id
+generation_config.eos_token_id = tokenizer.eos_token_id
+
 def run(question):
 
     question_prompt = f"""
-    ### Question:
-    {question}
-    ### Answer:
-    """
+### Question:
+{question}
+### Answer:
+""".strip()
+    
     chat = [
-      {"role": "system", "content": "Answer the following question from user."},
+      {"role": "system", "content": "Answer the following question."},
       {"role": "user", "content": question_prompt},
     ]
     
@@ -80,11 +94,15 @@ def run(question):
                                              return_tensors="pt").to(device)
 
     with torch.inference_mode():
-        outputs = model.generate(**encoding)
+        outputs = model.generate(
+            input_ids=encoding.input_ids,
+            attention_mask=encoding.attention_mask,
+            generation_config=generation_config
+        )
     if MODEL_TYPE == "seq2seq":
         answer = tokenizer.batch_decode(outputs, skip_special_tokens=True)[0]
     else:
-        answer = tokenizer.batch_decode(outputs[:, encoding.input_ids.shape[1]:], skip_special_tokens=True)[0].rstrip("<|im_end|>")
+        answer = tokenizer.batch_decode(outputs[:, encoding.input_ids.shape[1]:], skip_special_tokens=True)[0]
     
     return answer
 
