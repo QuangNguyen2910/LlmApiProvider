@@ -76,6 +76,7 @@ generation_config.top_p = 0.7
 generation_config.num_return_sequences = 1
 generation_config.pad_token_id = tokenizer.eos_token_id
 generation_config.eos_token_id = terminators
+generation_config.do_sample = True
 
 def run(question):
 
