@@ -85,26 +85,36 @@ def run(question):
 {question}
 ### Answer:
 """.strip()
-    
-    chat = [
-      {"role": "system", "content": "Answer the following question."},
-      {"role": "user", "content": question_prompt},
-    ]
-    
-    encoding = tokenizer.apply_chat_template(chat, tokenize=True,
-                                             add_generation_prompt=True,
-                                             return_dict=True,
-                                             return_tensors="pt").to(device)
 
-    with torch.inference_mode():
-        outputs = model.generate(
-            input_ids=encoding.input_ids,
-            attention_mask=encoding.attention_mask,
-            generation_config=generation_config
-        )
     if MODEL_TYPE == "seq2seq":
+        encoding = tokenizer(question_prompt, return_tensors="pt").to(device)
+
+        with torch.inference_mode():
+            outputs = model.generate(
+                input_ids=encoding.input_ids,
+                attention_mask=encoding.attention_mask,
+                generation_config=generation_config
+            )
+            
         answer = tokenizer.batch_decode(outputs, skip_special_tokens=True)[0]
     else:
+        chat = [
+          {"role": "system", "content": "Answer the following question."},
+          {"role": "user", "content": question_prompt},
+        ]
+        
+        encoding = tokenizer.apply_chat_template(chat, tokenize=True,
+                                                add_generation_prompt=True,
+                                                return_dict=True,
+                                                return_tensors="pt").to(device)
+
+        with torch.inference_mode():
+            outputs = model.generate(
+                input_ids=encoding.input_ids,
+                attention_mask=encoding.attention_mask,
+                generation_config=generation_config
+            )
+
         answer = tokenizer.batch_decode(outputs[:, encoding.input_ids.shape[1]:], skip_special_tokens=True)[0].rstrip("<|im_end|>")
     
     return answer
